@@ -1,32 +1,25 @@
-import { Link, useNavigate } from "react-router-dom";
-import { clearUser } from "../utils/storage";
+import { useNavigate } from "react-router-dom";
+import { clearUsers } from "../utils/storage";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
-  function logout() {
-    clearUser();
+  function handleLogout() {
+    clearUsers();
+    localStorage.removeItem("healthdx_current_user");
     navigate("/login");
   }
 
   return (
-    <nav className="flex justify-between items-center mb-6">
-      <h1 className="text-xl font-bold">HealthDx</h1>
+    <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
+      <h1 className="text-lg font-semibold">Health Tracker</h1>
 
-      <div className="space-x-4">
-        <Link to="/dashboard" className="text-blue-600 hover:underline">
-          Dashboard
-        </Link>
-        <Link to="/timeline" className="text-blue-600 hover:underline">
-          Timeline
-        </Link>
-        <button
-          onClick={logout}
-          className="text-red-600 hover:underline"
-        >
-          Logout
-        </button>
-      </div>
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+      >
+        Logout
+      </button>
     </nav>
   );
 }
