@@ -1,37 +1,45 @@
 import Navbar from "../components/Navbar";
-import LogSymptoms from "./LogSymptoms";
-import Timeline from "./Timeline";
 import HealthInsights from "../components/HealthInsights";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-3xl mx-auto">
-        {/* Top Navigation */}
+      <div className="max-w-4xl mx-auto">
         <Navbar />
 
-        {/* Page Heading */}
-        <h1 className="text-2xl font-bold mb-4">
+        <h1 className="text-2xl font-bold mb-6">
           Your Health Dashboard
         </h1>
 
-        {/* Health Insights */}
+        {/* Health Insights Preview */}
         <HealthInsights />
 
-        {/* Symptom Logging Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">
-            Log Today’s Symptoms
-          </h2>
-          <LogSymptoms />
-        </div>
+        {/* Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <Link
+            to="/log-symptoms"
+            className="bg-white p-6 rounded-xl shadow hover:shadow-md transition"
+          >
+            <h2 className="text-xl font-semibold mb-2">
+              Log Today’s Symptoms
+            </h2>
+            <p className="text-gray-600">
+              Add new symptoms, severity and duration
+            </p>
+          </Link>
 
-        {/* Timeline Section */}
-        <div>
-          <h2 className="text-xl font-semibold mb-3">
-            Health Timeline
-          </h2>
-          <Timeline />
+          <Link
+            to="/timeline"
+            className="bg-white p-6 rounded-xl shadow hover:shadow-md transition"
+          >
+            <h2 className="text-xl font-semibold mb-2">
+              Health Timeline
+            </h2>
+            <p className="text-gray-600">
+              View your symptom history over time
+            </p>
+          </Link>
         </div>
       </div>
     </div>
