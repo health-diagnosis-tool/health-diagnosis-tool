@@ -1,13 +1,22 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Timeline from "./pages/Timeline";
-import { getUser } from "./utils/storage";
+import { getUserById } from "./utils/storage";
 
 export default function App() {
-  // eslint-disable-next-line no-unused-vars
-  const [user, setUser] = useState(getUser());
+  const [user, setUser] = useState(null);
+
+  
+  useEffect(() => {
+    const currentUserId = localStorage.getItem("healthdx_current_user");
+
+    if (currentUserId) {
+      const savedUser = getUserById(currentUserId);
+      setUser(savedUser);
+    }
+  }, []);
 
   return (
     <Routes>
@@ -33,22 +42,3 @@ export default function App() {
     </Routes>
   );
 }
-
-/*
-import { Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Timeline from "./pages/Timeline";
-
-export default function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/timeline" element={<Timeline />} />
-    </Routes>
-  );
-}
-
-*/

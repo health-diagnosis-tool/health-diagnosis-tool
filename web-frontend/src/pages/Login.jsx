@@ -1,25 +1,47 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { saveUser } from "../utils/storage";
+import { saveUser, getUserById } from "../utils/storage";
 
 export default function Login({ setUser }) {
+  const [isNewUser, setIsNewUser] = useState(true);
+  const [userId, setUserId] = useState("");
   const [name, setName] = useState("");
+
   const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (!name.trim()) return;
+    if (!userId.trim()) return;
 
-    const user = { name };
+    
+    if (isNewUser) {
+      if (!name.trim()) return;
 
-    // 1️⃣ Save user to localStorage
-    saveUser(user);
+      const existingUser = getUserById(userId);
+      if (existingUser) {
+        alert("User ID already exists. Please login instead.");
+        return;
+      }
 
-    // 2️⃣ Update React state (THIS IS CRITICAL)
-    setUser(user);
+      const user = { userId, name };
+      saveUser(userId, user);
+      localStorage.setItem("healthdx_current_user", userId);
+      setUser(user);
+    }
 
-    // 3️⃣ Navigate to dashboard
+    
+    else {
+      const existingUser = getUserById(userId);
+      if (!existingUser) {
+        alert("User not found. Please create a new profile.");
+        return;
+      }
+
+      localStorage.setItem("healthdx_current_user", userId);
+      setUser(existingUser);
+    }
+
     navigate("/dashboard");
   }
 
@@ -30,26 +52,60 @@ export default function Login({ setUser }) {
         className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm"
       >
         <h1 className="text-2xl font-bold mb-4 text-center">
-          Welcome to HealthDx
+          Health Tracker
         </h1>
 
+        
+        <div className="flex mb-4">
+          <button
+            type="button"
+            onClick={() => setIsNewUser(true)}
+            className={`flex-1 py-2 rounded-l-lg ${
+              isNewUser ? "bg-black text-white" : "bg-gray-200"
+            }`}
+          >
+            New User
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsNewUser(false)}
+            className={`flex-1 py-2 rounded-r-lg ${
+              !isNewUser ? "bg-black text-white" : "bg-gray-200"
+            }`}
+          >
+            Returning User
+          </button>
+        </div>
+
+        
         <input
           type="text"
-          placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter User ID (e.g. user123)"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg p-2 mb-4"
         />
+
+        
+        {isNewUser && (
+          <input
+            type="text"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-2 mb-4"
+          />
+        )}
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-black text-white py-2 rounded-lg"
         >
-          Create Health Profile
+          {isNewUser ? "Create Profile & Start Tracking" : "Login"}
         </button>
 
         <p className="text-xs text-gray-500 mt-4 text-center">
-          No personal medical data is stored on servers.
+          Privacy First: All data is stored locally on your device.
         </p>
       </form>
     </div>

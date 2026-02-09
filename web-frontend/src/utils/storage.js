@@ -1,15 +1,25 @@
-export function saveUser(user) {
-  localStorage.setItem("healthdx_user", JSON.stringify(user));
+
+
+export function getUsers() {
+  return JSON.parse(localStorage.getItem("healthdx_users")) || {};
 }
 
-export function getUser() {
-  const user = localStorage.getItem("healthdx_user");
-  return user ? JSON.parse(user) : null;
+export function saveUser(userId, user) {
+  const users = getUsers();
+  users[userId] = user;
+  localStorage.setItem("healthdx_users", JSON.stringify(users));
 }
 
-export function clearUser() {
-  localStorage.removeItem("healthdx_user");
+export function getUserById(userId) {
+  const users = getUsers();
+  return users[userId] || null;
 }
+
+export function clearUsers() {
+  localStorage.removeItem("healthdx_users");
+}
+
+
 
 export function saveLog(log) {
   const logs = JSON.parse(localStorage.getItem("healthdx_logs")) || [];
